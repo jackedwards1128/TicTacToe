@@ -32,6 +32,8 @@ public class TicTacToe
     private int winIndex;       // Provides the index of the row/col of the win
     private int turn;
 
+    private TicTacToeViewer window;
+
     private Square[][] board;
     private boolean isGameOver;
 
@@ -42,11 +44,12 @@ public class TicTacToe
      * The view is initialized with this TicTacToe object
      */
     public TicTacToe() {
+        this.window = new TicTacToeViewer(this);
         // Initialize Squares in the board
         this.board = new Square[3][3];
         for(int row = 0; row < this.board.length; row++) {
             for(int col = 0; col< this.board[row].length; col++) {
-                this.board[row][col] = new Square(row, col);
+                this.board[row][col] = new Square(row, col, window);
             }
         }
 
@@ -56,6 +59,8 @@ public class TicTacToe
         this.winner = BLANK;
         this.winIndex = -1;
         this.winDirection = -1;
+
+
     }
 
     /******************** Methods You May Find Helpful ********************/
@@ -107,6 +112,7 @@ public class TicTacToe
 
         System.out.println("Welcome to Tic Tac Toe!");
 
+
         // Loop until there is a winner or no more turns
         while(!this.checkWin() && this.checkTurn()) {
             this.printBoard();
@@ -125,18 +131,23 @@ public class TicTacToe
         this.isGameOver = true;
 
         // Determine if there was a winner
+        String resultText = "it's a tie";
         if(!this.checkWin()) {
-            System.out.println("Game ends in a tie!");
+            resultText = "It's a tie!";
         } else {
             this.markWinningSquares();
             if (this.turn%2 == 0) {
                 this.winner = O_MARKER;
-                System.out.println("O Wins!");
+                resultText = "O Wins!";
             } else {
                 this.winner = X_MARKER;
-                System.out.println("X Wins!");
+                resultText = "X Wins!";
             }
         }
+
+        System.out.println(resultText);
+        window.setResultText(resultText);
+        window.repaint();
     }
 
 
@@ -280,6 +291,7 @@ public class TicTacToe
             row++;
             System.out.println();
         }
+        window.repaint();
     }
 
     public static void main(String[] args) {
